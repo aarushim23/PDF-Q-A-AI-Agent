@@ -1,50 +1,78 @@
-Document Q&A AI Agent
+Document Q&A AI Agent Prototype
+This repository contains a Document Q&A AI Agent prototype developed as part of the assessment for Task 1: Building an Enterprise-Ready AI Agent. The solution leverages Python and advanced NLP techniques to process PDF documents, extract structured content, and provide intelligent query responses. It includes an ArXiv integration for fetching papers, aligning with enterprise-grade requirements for scalability and usability.
 Overview
-A Streamlit-based AI agent for querying PDF documents using Flan-T5-small and integrating with the Arxiv API. The agent supports document ingestion, natural language queries, summarization, metrics extraction, and Arxiv paper fetching.
-Setup
+The Document Q&A AI Agent is designed to ingest multiple PDF documents, extract meaningful content (text, tables, and sections), and enable users to query the data via a Streamlit-based interface. It uses the Flan-T5-small LLM for natural language understanding and includes a bonus ArXiv API integration for dynamic paper lookup.
+Features
 
-Clone the repository:git clone <repository-url>
-cd doc-qa-agent
+Multi-PDF Ingestion: Processes multiple PDF files, extracting text, tables, and metadata.
+Content Extraction: Preserves titles, abstracts, sections, and tables with high accuracy, handling equations and figures where possible.
+NLP-Powered Queries:
+Direct lookup (e.g., "What is the conclusion of Paper X?")
+Summarization (e.g., "Summarize the methodology of Paper C.")
+Metric extraction (e.g., "What are the accuracy and F1-score reported in Paper D?")
 
 
-Set up Anaconda environment:conda create -n ai-agent python=3.10
+ArXiv Integration: Fetches papers based on user descriptions using the ArXiv API (bonus feature).
+Enterprise-Ready: Optimized for context handling, error resilience, and clear documentation.
+
+Installation
+Prerequisites
+
+Python 3.8 or higher
+Conda environment (recommended)
+
+Setup Instructions
+
+Clone the repository:git clone <your-github-repo-link>
+cd document-qa-ai-agent
+
+
+Create and activate a Conda environment:conda create -n ai-agent python=3.9
 conda activate ai-agent
-conda install -c conda-forge pdfplumber streamlit pandas transformers torch
-pip install arxiv
 
 
-Run the app:streamlit run app.py
+Install required libraries:pip install pdfplumber transformers torch streamlit arxiv requests
+
+
+(Optional) For OCR support or advanced LLM:conda install -c conda-forge tesseract
+pip install pytesseract mistralai
 
 
 
 Usage
 
-Upload PDFs: Use the Streamlit interface to upload PDF files.
-Query Documents: Ask questions like "What is the conclusion of Paper X?", "Summarize the methodology", or "Extract accuracy".
-Fetch Arxiv Papers: Enter a description (e.g., "transformer models 2023") to download and process papers.
-View Tables: Display extracted tables from PDFs.
+Run the application:streamlit run app.py
 
-Design Choices
 
-Flan-T5-small: Chosen for lightweight, free LLM processing suitable for CPU environments.
-pdfplumber: Used for robust text and table extraction from PDFs.
-Streamlit: Provides an intuitive web interface for user interaction.
-Arxiv API: Integrated for bonus functionality, enabling dynamic paper fetching.
-JSON Storage: Stores extracted PDF content for efficient querying.
+Upload one or more PDF files via the interface.
+Use the query input or quick buttons (Summary, Accuracy, Conclusion, Method) to ask questions.
+Fetch ArXiv papers by entering a description in the sidebar and clicking "Fetch."
+View extracted tables or query responses in the main window.
 
-Challenges
+File Structure
 
-Managed Flan-T5's 512-token limit by chunking context.
-Handled multi-column PDFs with pdfplumber’s robust parsing.
-Ensured error handling for Arxiv API and PDF processing.
+app.py: Streamlit frontend with upload, query, and ArXiv fetch capabilities. Includes error handling and a clean UI.
+pdf_processor.py: Manages PDF ingestion, text extraction, and table detection with strict validation to preserve structure.
+llm_processor.py: Implements the Flan-T5-small LLM for query processing, with fallback text analysis and metric extraction.
+arxiv_fetcher.py: Handles ArXiv API calls, paper search, and PDF downloads with robust error recovery.
+extracted_data.json: Stores processed document content.
 
-Future Improvements
+Technical Details
 
-Add semantic search using embeddings for better query matching.
-Support image/equation extraction with vision models.
-Optimize for larger PDFs with database storage.
+LLM Integration: Uses Flan-T5-small via the transformers library for NLP tasks, optimized for context-aware responses.
+Content Extraction: pdfplumber extracts text and tables, with custom cleaning to handle equations and figures. Tables are validated to avoid misclassification.
+ArXiv API: Leverages the arxiv library for real-time paper fetching, with fallback download methods.
+Security: Input sanitization and error logging are implemented to meet basic enterprise standards.
 
-Video Demo
-[Link to YouTube/Google Drive video] (Add after recording)
-Testing
-Tested with Arxiv papers (e.g., single-column, multi-column, with tables). Edge cases like malformed PDFs and failed Arxiv queries are handled gracefully.
+Limitations
+
+Table Extraction: Limited to text-based tables; image-based tables require OCR (planned enhancement).
+LLM Scalability: Flan-T5-small may underperform with complex queries; upgrading to Mistral-7B is recommended (see Enhancements).
+Equation Handling: Basic preservation; advanced rendering (e.g., LaTeX) is not yet supported.
+
+Enhancements
+
+OCR Support: Integrate pytesseract in pdf_processor.py for image-based table extraction.
+Advanced LLM: Switch to Mistral-7B in llm_processor.py for better accuracy (requires GPU).
+LaTeX Support: Add LaTeX rendering for equations using external libraries.
+Multi-User Support: Implement session management for enterprise deployment.
