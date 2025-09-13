@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Anaconda
+.env
+.conda
+conda/
+
+# PDFs and JSON
+pdfs/
+extracted_data.json
+
+# VS Code
+.vscode/
+
+# Misc
+*.log
+.DS_Store
